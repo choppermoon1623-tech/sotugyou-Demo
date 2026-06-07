@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>卒業証書授与式 ダッシュボード（サンプル）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f6f3ec; --card:#ffffff; --ink:#1d2438; --ink-soft:#4a5169;
+    --crimson:#962b2b; --crimson-soft:#f4e7e4; --line:#e3ddd0; --line-soft:#efeae0;
+    --gold:#9c7b32; --accent-bg:#eef1f6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Noto Sans JP",sans-serif;background:var(--paper);color:var(--ink);line-height:1.7;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:840px;margin:0 auto;padding:0 16px 64px}
+  .serif{font-family:"Noto Serif JP",serif}
+
+  /* header */
+  header{background:var(--ink);color:#fff;padding:26px 16px 22px;text-align:center;position:relative;overflow:hidden}
+  header::before,header::after{content:"";position:absolute;top:0;bottom:0;width:10px}
+  header::before{left:0;background:var(--crimson)}
+  header::after{right:0;background:var(--crimson)}
+  header .kai{font-size:13px;letter-spacing:.3em;color:#cdb9a0;margin-bottom:6px}
+  header h1{font-family:"Noto Serif JP",serif;font-size:25px;font-weight:700;letter-spacing:.05em}
+  header .meta{margin-top:12px;font-size:14px;color:#d9d4ca}
+  header .meta b{color:#fff;font-weight:500}
+
+  /* summary cards */
+  .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0}
+  .scard{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 10px;text-align:center}
+  .scard .lbl{font-size:11px;color:var(--ink-soft);margin-bottom:4px}
+  .scard .val{font-family:"Noto Serif JP",serif;font-size:18px;font-weight:700}
+  .scard .val small{font-size:11px;font-weight:400}
+
+  /* name finder */
+  .finder{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 16px 18px;margin-bottom:16px}
+  .finder .ttl{font-size:14px;font-weight:700;display:flex;align-items:center;gap:7px;margin-bottom:4px}
+  .finder .ttl .dot{width:8px;height:8px;border-radius:50%;background:var(--crimson)}
+  .finder .sub{font-size:12px;color:var(--ink-soft);margin-bottom:12px}
+  .names{display:flex;flex-wrap:wrap;gap:7px}
+  .chip{font-size:13px;padding:6px 13px;border:1px solid var(--line);background:#fff;border-radius:999px;cursor:pointer;transition:.12s;color:var(--ink)}
+  .chip:hover{border-color:var(--crimson);color:var(--crimson)}
+  .chip.on{background:var(--crimson);border-color:var(--crimson);color:#fff;font-weight:500}
+  .chip.team{background:var(--accent-bg);border-color:#d6dbe6}
+  .chip.team.on{background:var(--ink);border-color:var(--ink);color:#fff}
+
+  #myView{margin-top:14px;display:none}
+  #myView.show{display:block}
+  .myhead{font-size:13px;color:var(--ink-soft);margin-bottom:8px}
+  .myhead b{font-family:"Noto Serif JP",serif;font-size:17px;color:var(--crimson);font-weight:700}
+  .myjob{border-left:3px solid var(--crimson);background:var(--crimson-soft);border-radius:0 8px 8px 0;padding:9px 12px;margin-bottom:8px}
+  .myjob .k{font-size:12px;color:var(--gold);font-weight:700;display:block}
+  .myjob .t{font-size:14px;font-weight:500}
+  .myjob .d{font-size:12.5px;color:var(--ink-soft)}
+  .nojob{font-size:13px;color:var(--ink-soft)}
+
+  /* tabs */
+  .tabs{display:flex;gap:4px;overflow-x:auto;margin-bottom:14px;border-bottom:1px solid var(--line);scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{flex:none;font-size:13.5px;padding:10px 14px;border:none;background:none;cursor:pointer;color:var(--ink-soft);border-bottom:2px solid transparent;white-space:nowrap;font-family:inherit}
+  .tab.on{color:var(--crimson);border-bottom-color:var(--crimson);font-weight:700}
+  .panel{display:none;animation:fade .25s ease}
+  .panel.on{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+  .sec-h{font-family:"Noto Serif JP",serif;font-size:17px;font-weight:700;margin:4px 0 12px;display:flex;align-items:center;gap:8px}
+  .sec-h::before{content:"";width:4px;height:18px;background:var(--crimson);border-radius:2px}
+  .note{font-size:12.5px;color:var(--ink-soft);background:var(--line-soft);border-radius:8px;padding:9px 12px;margin-bottom:14px}
+
+  /* timeline */
+  .tl{position:relative;padding-left:8px}
+  .row{display:flex;gap:12px;padding-bottom:2px}
+  .time{flex:none;width:96px;font-size:12.5px;font-weight:700;color:var(--ink);padding-top:11px;font-variant-numeric:tabular-nums}
+  .bar{flex:none;width:14px;display:flex;flex-direction:column;align-items:center}
+  .bar .pt{width:11px;height:11px;border-radius:50%;background:#fff;border:2px solid var(--crimson);margin-top:13px}
+  .bar .ln{flex:1;width:2px;background:var(--line)}
+  .row.key .bar .pt{background:var(--crimson)}
+  .body{flex:1;padding:9px 0 14px}
+  .body .it{font-size:14.5px;font-weight:500}
+  .row.key .body .it{color:var(--crimson);font-weight:700}
+  .body .sub{font-size:12.5px;color:var(--ink-soft)}
+  .badge{display:inline-block;font-size:11px;background:var(--accent-bg);color:var(--ink-soft);border-radius:5px;padding:1px 7px;margin-left:6px;vertical-align:1px}
+
+  /* program */
+  .prog{counter-reset:p}
+  .pstep{display:flex;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:11px 13px;margin-bottom:8px;align-items:baseline}
+  .pstep .n{flex:none;width:26px;height:26px;border-radius:50%;background:var(--ink);color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:"Noto Serif JP",serif}
+  .pstep .pt2{font-size:14.5px;font-weight:500}
+  .pstep .pd{font-size:12.5px;color:var(--ink-soft);margin-top:1px}
+  .pstep.pre{background:var(--line-soft);border-style:dashed}
+  .pstep.pre .n{background:#fff;border:1.5px solid var(--ink-soft);color:var(--ink-soft);font-size:14px}
+  .pstep.song{border-color:var(--crimson);background:var(--crimson-soft)}
+
+  /* roles */
+  .grp{margin-bottom:6px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--card)}
+  .grp summary{list-style:none;cursor:pointer;padding:12px 14px;font-weight:700;font-size:14.5px;display:flex;align-items:center;gap:9px;background:#fff}
+  .grp summary::-webkit-details-marker{display:none}
+  .grp summary .tag{font-family:"Noto Serif JP",serif;color:#fff;background:var(--crimson);font-size:12px;padding:2px 9px;border-radius:6px}
+  .grp summary .ar{margin-left:auto;color:var(--ink-soft);font-size:12px;transition:.2s}
+  .grp[open] summary .ar{transform:rotate(180deg)}
+  .ritem{padding:10px 14px;border-top:1px solid var(--line-soft);display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+  .ritem .rk{font-size:13.5px;font-weight:500;flex:none;min-width:120px}
+  .ritem .who{font-size:12px}
+  .ritem .who span{display:inline-block;background:var(--accent-bg);color:var(--ink);border-radius:5px;padding:1px 8px;margin-right:4px}
+  .ritem .who span.team{background:#e6e1d4;color:#5e5436}
+  .ritem .rd{font-size:12.5px;color:var(--ink-soft);width:100%}
+  .ritem.hit{background:var(--crimson-soft)}
+  .ritem.hit .who span.me{background:var(--crimson);color:#fff;font-weight:500}
+
+  /* prep */
+  .prep{display:flex;flex-direction:column;gap:7px}
+  .pp{display:flex;gap:11px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 13px}
+  .pp .dt{flex:none;width:62px;text-align:center}
+  .pp .dt .md{font-family:"Noto Serif JP",serif;font-size:16px;font-weight:700;line-height:1.1}
+  .pp .dt .dw{font-size:11px;color:var(--ink-soft)}
+  .pp .pc .ev{font-size:14px;font-weight:500}
+  .pp .pc .tk{font-size:12.5px;color:var(--ink-soft)}
+  .pp.big{border-color:var(--crimson);background:var(--crimson-soft)}
+  .pp.big .dt .md{color:var(--crimson)}
+
+  footer{text-align:center;font-size:11.5px;color:var(--ink-soft);margin-top:28px;padding-top:16px;border-top:1px solid var(--line)}
+  @media(max-width:560px){
+    .summary{grid-template-columns:repeat(2,1fr)}
+    .time{width:78px;font-size:12px}
+    header h1{font-size:21px}
+    .ritem .rk{min-width:100%}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="kai">〇〇市立〇〇中学校</div>
+  <h1>卒業証書授与式</h1>
+  <div class="meta"><b>3月12日(木) 10:00〜11:10</b>　/　会場：体育館</div>
+</header>
+
+<div class="wrap">
+
+  <div class="summary">
+    <div class="scard"><div class="lbl">卒業生</div><div class="val">15<small>名</small></div></div>
+    <div class="scard"><div class="lbl">式の時間</div><div class="val">62<small>分</small></div></div>
+    <div class="scard"><div class="lbl">式次第</div><div class="val">16<small>項目</small></div></div>
+    <div class="scard"><div class="lbl">係分担</div><div class="val">9<small>係</small></div></div>
+  </div>
+
+  <!-- NAME FINDER -->
+  <div class="finder">
+    <div class="ttl"><span class="dot"></span>あなたの担当をさがす</div>
+    <div class="sub">名前をタップすると、自分の役割だけが下に表示され、係分担表でも色がつきます。</div>
+    <div class="names" id="names"></div>
+    <div id="myView">
+      <div class="myhead"><b id="myName"></b> さんの担当</div>
+      <div id="myJobs"></div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs" id="tabs">
+    <button class="tab on" data-p="flow">当日の流れ</button>
+    <button class="tab" data-p="prog">式次第</button>
+    <button class="tab" data-p="role">係分担</button>
+    <button class="tab" data-p="prep">準備日程</button>
+  </div>
+
+  <!-- FLOW -->
+  <div class="panel on" id="p-flow">
+    <div class="sec-h">当日のタイムライン</div>
+    <div class="note">※ 11:40までには3年生の学活を終了。赤い丸が式本番です。</div>
+    <div class="tl" id="tl"></div>
+  </div>
+
+  <!-- PROGRAM -->
+  <div class="panel" id="p-prog">
+    <div class="sec-h">式次第（10:00〜11:02）</div>
+    <div class="note">在校生・保護者・来賓入場（BGM）のあと、卒業生が入場して開式します。</div>
+    <div class="prog" id="prog"></div>
+  </div>
+
+  <!-- ROLES -->
+  <div class="panel" id="p-role">
+    <div class="sec-h">係分担</div>
+    <div class="note">係名をタップで開閉。上で名前を選ぶと、該当する項目に色がつきます。「3年・2年・1年」は学年団です。</div>
+    <div id="roles"></div>
+  </div>
+
+  <!-- PREP -->
+  <div class="panel" id="p-prep">
+    <div class="sec-h">準備日程</div>
+    <div class="note">卒業式練習前の時間は準備に使用。3/8以降は体育館ステージ側は式練・合唱練のみ使用可。</div>
+    <div class="prep" id="prep"></div>
+  </div>
+
+  <footer>卒業証書授与式 実施要項より作成（AIの回し者・匿名サンプル）</footer>
+</div>
+
+<script>
+/* ---------- data ---------- */
+const timeline=[
+  ["8:15-8:30","職員打ち合わせ","",0],
+  ["8:30-","係生徒登校","受付準備等",0],
+  ["8:50-9:00","在校生登校","教室待機",0],
+  ["9:00-9:20","在校生 朝の会 / 卒業生登校","頭髪・服装等チェック",0],
+  ["9:25-9:40","在校生 合唱練習(体育館) / 卒業生 朝の会","整列指導・礼法確認",0],
+  ["9:40-9:45","休憩","トイレ等",0],
+  ["-9:45","保護者受付 終了","遅れた保護者は職員玄関",0],
+  ["9:50-9:55","保護者・来賓 入場","",0],
+  ["9:55-9:57","卒業生 入場準備","入口整列",0],
+  ["10:00-11:02","卒業式","式次第タブ参照",1],
+  ["11:02-11:10","全員退場","教室へ",0],
+  ["11:10-11:40","各学年 学活","",0],
+  ["11:40-","在校生 見送り準備","生徒会の指示・整列",0],
+  ["11:50-","卒業生 見送り","",1],
+  ["-12:20","完全下校","",0],
+  ["12:20-","職員打ち合わせ","",0],
+];
+const program=[
+  ["pre","","在校生・保護者・来賓 入場","BGM"],
+  ["",1,"卒業生入場","担任先頭・番号順／間に合えば吹奏楽録音"],
+  ["",2,"修礼","ピアノ：伴奏者(生徒)"],
+  ["",3,"開式の辞",""],
+  ["",4,"国歌斉唱","CD再生"],
+  ["",5,"校歌斉唱","ピアノ伴奏：伴奏者(生徒)"],
+  ["",6,"学事報告",""],
+  ["",7,"卒業証書授与","ホルダーごと渡す"],
+  ["",8,"学校長式辞","在校生・卒業生とも座礼"],
+  ["",9,"祝辞","PTA会長／座礼"],
+  ["",10,"祝詞・祝電披露","BGM(オルゴール)"],
+  ["",11,"在校生送辞","在校生代表"],
+  ["",12,"卒業生答辞","卒業生代表"],
+  ["song",13,"全校合唱「旅立ちの日に」","指揮：生徒代表／伴奏：生徒代表"],
+  ["",14,"閉式の辞",""],
+  ["",15,"修礼","ピアノ：伴奏者(生徒)"],
+  ["",16,"退場","BGM／在校生は拍手"],
+];
+const teams=["3年","2年","1年"];
+const roles=[
+  ["総務",[
+    ["総括",["教頭","A教諭"],"日程調整、各係調整"],
+    ["案内状",["教頭"],"来賓・保護者案内状、祝辞依頼"],
+    ["学事報告",["教頭"],"原稿作成・印刷・綴じ込み(1年)"],
+    ["ステージ花",["教頭"],"生花注文"],
+    ["祝文・祝電",["B教諭","C教諭"],"受付・原稿準備・掲示・披露"],
+  ]],
+  ["庶務",[
+    ["証書台帳",["3年"],"卒業証書台帳記入"],
+    ["卒業証書",["校長","3年"],"証書への記入・押印・台帳照合"],
+    ["記念品",["教頭","3年"],"胸花・記念品の準備(教室配布)"],
+  ]],
+  ["進行",[
+    ["司会進行",["A教諭"],"総練習・卒業式の司会、礼法指導(全体)"],
+    ["合図・暖房",["D教諭","E教諭"],"整列・入場合図、ドア管理、暖房"],
+    ["卒業生入場案内",["F教諭"],"卒業生入場案内"],
+    ["証書管理",["G教諭","H教諭"],"証書管理、授与時の介添え(H教諭)"],
+    ["合唱指導",["A教諭"],"全校合唱の指導、進行要項作成"],
+    ["伴奏",["伴奏者(生徒)"],"修礼・校歌の伴奏"],
+    ["放送・BGM",["F教諭","A教諭"],"放送機器・BGM準備"],
+    ["ビデオ・写真",["E教諭","D教諭"],"授与時のビデオ、式中の写真記録"],
+  ]],
+  ["会場",[
+    ["体育館会場準備",["2年","A教諭"],"会場準備計画、全体配置計画"],
+    ["ステージ",["2年","公務補"],"国旗・市旗・校旗・演台・横看板・生花の設置"],
+    ["紅白幕",["2年"],"紅白幕設置"],
+    ["長机・椅子",["2年"],"長机・椅子・白布"],
+    ["合唱台・ピアノ",["1年","2年"],"合唱台・ピアノの設置"],
+    ["保護者席",["2年"],"保護者席の設置(120)"],
+    ["ビデオ設置",["2年","E教諭"],"ビデオ・プロジェクタ・スクリーン設置"],
+    ["看板・案内表示",["1年","公務補"],"玄関前看板、案内掲示物"],
+    ["廊下・教室準備",["1年"],"廊下・玄関・3年教室装飾"],
+    ["保護者控え室",["3年"],"控室の設置(会議室)"],
+    ["受付",["C教諭"],"受付設置、しおり配布、控え室案内"],
+    ["靴置き場",["公務補"],"靴置き場・スリッパ準備"],
+  ]],
+  ["指導",[
+    ["送辞・答辞",["H教諭","A教諭"],"送辞・答辞作成指導、礼法指導"],
+    ["生徒指導",["E教諭"],"身だしなみ・規律指導"],
+    ["見送り",["H教諭"],"見送り計画、移動指示"],
+  ]],
+  ["案内",[
+    ["来賓・保護者案内",["校長","教頭"],"入場案内(来賓:校長 保護者:教頭)"],
+  ]],
+  ["接待",[
+    ["来賓接待",["B教諭"],"湯茶準備"],
+  ]],
+  ["美化",[
+    ["美化・清掃",["C教諭"],"校舎内環境整備、清掃計画、朝の清掃"],
+  ]],
+  ["校舎",[
+    ["駐車場",["公務補"],"除雪、駐車場案内表示"],
+  ]],
+];
+const prep=[
+  ["2/12","木","案内状送付","教頭",0],
+  ["2/18","水","2月職員会議：進行表提案・各係提案／記念品準備完了","A教諭・各係・教頭・3年",0],
+  ["3/3","火","卒業台帳完成","3年",0],
+  ["3/4","水","公立学力検査日","",0],
+  ["3/5","木","公立面接日／生花注文","教頭",0],
+  ["3/6","金","卒業生練習①・在校生練習①・全校合唱練習","A教諭・各学年団",0],
+  ["3/9","月","同窓会入会式・卒業生練習②③・証書/学事報告完成","A教諭・各学年団",0],
+  ["3/10","火","3年生を送る会・奉仕活動・卒業生練習④・在校生練習②","A教諭・各学年団",0],
+  ["3/11","水","総練習・会場準備","A教諭・各学年団・各係",0],
+  ["3/12","木","第79回 卒業証書授与式","",1],
+  ["3/13","金","後片付け","各係・教頭",0],
+];
+
+/* ---------- render ---------- */
+const $=s=>document.querySelector(s);
+
+/* timeline */
+$("#tl").innerHTML=timeline.map((r,i)=>{
+  const last=i===timeline.length-1;
+  return `<div class="row ${r[3]?'key':''}">
+    <div class="time">${r[0]}</div>
+    <div class="bar"><div class="pt"></div>${last?'':'<div class="ln"></div>'}</div>
+    <div class="body"><div class="it">${r[1]}</div>${r[2]?`<div class="sub">${r[2]}</div>`:''}</div>
+  </div>`;
+}).join("");
+
+/* program */
+$("#prog").innerHTML=program.map(p=>{
+  const cls=p[0]?` ${p[0]}`:"";
+  const num=p[1]?p[1]:"◯";
+  return `<div class="pstep${cls}"><div class="n">${num}</div><div><div class="pt2">${p[2]}</div>${p[3]?`<div class="pd">${p[3]}</div>`:''}</div></div>`;
+}).join("");
+
+/* roles */
+const roleHtml=roles.map((g,gi)=>{
+  const items=g[1].map(it=>{
+    const who=it[1].map(w=>`<span class="${teams.includes(w)?'team':''}" data-who="${w}">${w}</span>`).join("");
+    return `<div class="ritem" data-people="${it[1].join(',')}">
+      <div class="rk">${it[0]}</div><div class="who">${who}</div><div class="rd">${it[2]}</div></div>`;
+  }).join("");
+  return `<details class="grp" ${gi<3?'open':''}>
+    <summary><span class="tag">${g[0]}</span>${g[1].length}項目<span class="ar">▼</span></summary>
+    ${items}</details>`;
+}).join("");
+$("#roles").innerHTML=roleHtml;
+
+/* prep */
+$("#prep").innerHTML=prep.map(p=>`
+  <div class="pp ${p[4]?'big':''}">
+    <div class="dt"><div class="md">${p[0]}</div><div class="dw">(${p[1]})</div></div>
+    <div class="pc"><div class="ev">${p[2]}</div>${p[3]?`<div class="tk">担当：${p[3]}</div>`:''}</div>
+  </div>`).join("");
+
+/* name chips */
+const people=["校長","教頭","A教諭","B教諭","C教諭","D教諭","E教諭","F教諭","G教諭","H教諭","公務補"];
+const allChips=[...people,...teams];
+$("#names").innerHTML=allChips.map(n=>{
+  const isTeam=teams.includes(n);
+  return `<button class="chip ${isTeam?'team':''}" data-name="${n}">${n}${isTeam?'団':''}</button>`;
+}).join("");
+
+let current=null;
+function selectName(n){
+  const chips=document.querySelectorAll(".chip");
+  document.querySelectorAll(".ritem").forEach(r=>{r.classList.remove("hit");r.querySelectorAll(".who span").forEach(s=>s.classList.remove("me"));});
+  if(current===n){ // toggle off
+    current=null;chips.forEach(c=>c.classList.remove("on"));
+    $("#myView").classList.remove("show");return;
+  }
+  current=n;
+  chips.forEach(c=>c.classList.toggle("on",c.dataset.name===n));
+  // collect jobs
+  const jobs=[];
+  roles.forEach(g=>g[1].forEach(it=>{ if(it[1].includes(n)) jobs.push([g[0],it[0],it[2]]); }));
+  $("#myName").textContent=n+(teams.includes(n)?"団":"");
+  $("#myJobs").innerHTML=jobs.length?jobs.map(j=>
+    `<div class="myjob"><span class="k">${j[0]}</span><span class="t">${j[1]}</span><div class="d">${j[2]}</div></div>`
+  ).join(""):`<div class="nojob">この名前に直接ひもづく係はありません。</div>`;
+  $("#myView").classList.add("show");
+  // highlight in role table + open groups
+  document.querySelectorAll(".ritem").forEach(r=>{
+    if(r.dataset.people.split(",").includes(n)){
+      r.classList.add("hit");
+      r.querySelectorAll(".who span").forEach(s=>{ if(s.dataset.who===n) s.classList.add("me"); });
+      r.closest("details").open=true;
+    }
+  });
+}
+document.querySelectorAll(".chip").forEach(c=>c.addEventListener("click",()=>selectName(c.dataset.name)));
+
+/* tabs */
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("on"));
+  document.querySelectorAll(".panel").forEach(x=>x.classList.remove("on"));
+  t.classList.add("on");
+  $("#p-"+t.dataset.p).classList.add("on");
+}));
+</script>
+</body>
+</html>
