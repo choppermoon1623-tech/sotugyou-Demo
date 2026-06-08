@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>卒業証書授与式 ダッシュボード（サンプル）</title>
+<title>第80回 卒業証書授与式 ダッシュボード</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@500;700&display=swap" rel="stylesheet">
@@ -34,6 +34,17 @@
   .scard .lbl{font-size:11px;color:var(--ink-soft);margin-bottom:4px}
   .scard .val{font-family:"Noto Serif JP",serif;font-size:18px;font-weight:700}
   .scard .val small{font-size:11px;font-weight:400}
+
+  /* countdown */
+  .cd{background:var(--ink);color:#fff;border-radius:14px;padding:16px 14px;margin-bottom:16px;text-align:center;position:relative;overflow:hidden}
+  .cd .cl{font-size:11.5px;letter-spacing:.12em;color:#cdb9a0;margin-bottom:11px}
+  .cd .cl b{color:#fff;font-family:"Noto Serif JP",serif;font-weight:500;letter-spacing:.02em}
+  .cd .boxes{display:flex;justify-content:center;gap:8px}
+  .cd .box{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:10px;padding:9px 4px;min-width:60px}
+  .cd .box .num{font-family:"Noto Serif JP",serif;font-size:26px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+  .cd .box .u{font-size:10px;color:#cdb9a0;margin-top:5px}
+  .cd.done{background:var(--crimson)}
+  .cd .done-msg{font-family:"Noto Serif JP",serif;font-size:20px;font-weight:700;padding:6px 0}
 
   /* name finder */
   .finder{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 16px 18px;margin-bottom:16px}
@@ -132,9 +143,9 @@
 </head>
 <body>
 <header>
-  <div class="kai">〇〇市立〇〇中学校</div>
-  <h1>卒業証書授与式</h1>
-  <div class="meta"><b>3月12日(木) 10:00〜11:10</b>　/　会場：体育館</div>
+  <div class="kai">登別市立登別中学校</div>
+  <h1>第80回 卒業証書授与式</h1>
+  <div class="meta"><b>令和9年3月11日(木) 10:00〜11:10</b>　/　会場：体育館</div>
 </header>
 
 <div class="wrap">
@@ -144,6 +155,17 @@
     <div class="scard"><div class="lbl">式の時間</div><div class="val">62<small>分</small></div></div>
     <div class="scard"><div class="lbl">式次第</div><div class="val">16<small>項目</small></div></div>
     <div class="scard"><div class="lbl">係分担</div><div class="val">9<small>係</small></div></div>
+  </div>
+
+  <!-- COUNTDOWN -->
+  <div class="cd" id="cd">
+    <div class="cl">卒業式まで　<b>令和9年3月11日(木) 10:00</b></div>
+    <div class="boxes" id="cdBoxes">
+      <div class="box"><div class="num" id="cd-d">--</div><div class="u">日</div></div>
+      <div class="box"><div class="num" id="cd-h">--</div><div class="u">時間</div></div>
+      <div class="box"><div class="num" id="cd-m">--</div><div class="u">分</div></div>
+      <div class="box"><div class="num" id="cd-s">--</div><div class="u">秒</div></div>
+    </div>
   </div>
 
   <!-- NAME FINDER -->
@@ -193,7 +215,7 @@
     <div class="prep" id="prep"></div>
   </div>
 
-  <footer>卒業証書授与式 実施要項より作成（AIの回し者・匿名サンプル）</footer>
+  <footer>第80回卒業証書授与式 実施要項より作成 ／ 令和9年2月17日 教務部教務係</footer>
 </div>
 
 <script>
@@ -219,30 +241,30 @@ const timeline=[
 const program=[
   ["pre","","在校生・保護者・来賓 入場","BGM"],
   ["",1,"卒業生入場","担任先頭・番号順／間に合えば吹奏楽録音"],
-  ["",2,"修礼","ピアノ：伴奏者(生徒)"],
+  ["",2,"修礼","ピアノ：前田涼月"],
   ["",3,"開式の辞",""],
   ["",4,"国歌斉唱","CD再生"],
-  ["",5,"校歌斉唱","ピアノ伴奏：伴奏者(生徒)"],
+  ["",5,"校歌斉唱","ピアノ伴奏：前田涼月"],
   ["",6,"学事報告",""],
   ["",7,"卒業証書授与","ホルダーごと渡す"],
   ["",8,"学校長式辞","在校生・卒業生とも座礼"],
-  ["",9,"祝辞","PTA会長／座礼"],
+  ["",9,"祝辞","PTA会長 勝間広靖 様／座礼"],
   ["",10,"祝詞・祝電披露","BGM(オルゴール)"],
-  ["",11,"在校生送辞","在校生代表"],
-  ["",12,"卒業生答辞","卒業生代表"],
-  ["song",13,"全校合唱「旅立ちの日に」","指揮：生徒代表／伴奏：生徒代表"],
+  ["",11,"在校生送辞","在校生代表 菜花舜"],
+  ["",12,"卒業生答辞","卒業生代表 橋場紗希"],
+  ["song",13,"全校合唱「旅立ちの日に」","指揮：白田颯斗／伴奏：宮下蒼生"],
   ["",14,"閉式の辞",""],
-  ["",15,"修礼","ピアノ：伴奏者(生徒)"],
+  ["",15,"修礼","ピアノ：前田涼月"],
   ["",16,"退場","BGM／在校生は拍手"],
 ];
 const teams=["3年","2年","1年"];
 const roles=[
   ["総務",[
-    ["総括",["教頭","A教諭"],"日程調整、各係調整"],
+    ["総括",["教頭","三浦"],"日程調整、各係調整"],
     ["案内状",["教頭"],"来賓・保護者案内状、祝辞依頼"],
     ["学事報告",["教頭"],"原稿作成・印刷・綴じ込み(1年)"],
     ["ステージ花",["教頭"],"生花注文"],
-    ["祝文・祝電",["B教諭","C教諭"],"受付・原稿準備・掲示・披露"],
+    ["祝文・祝電",["大岩","奈良"],"受付・原稿準備・掲示・披露"],
   ]],
   ["庶務",[
     ["証書台帳",["3年"],"卒業証書台帳記入"],
@@ -250,59 +272,59 @@ const roles=[
     ["記念品",["教頭","3年"],"胸花・記念品の準備(教室配布)"],
   ]],
   ["進行",[
-    ["司会進行",["A教諭"],"総練習・卒業式の司会、礼法指導(全体)"],
-    ["合図・暖房",["D教諭","E教諭"],"整列・入場合図、ドア管理、暖房"],
-    ["卒業生入場案内",["F教諭"],"卒業生入場案内"],
-    ["証書管理",["G教諭","H教諭"],"証書管理、授与時の介添え(H教諭)"],
-    ["合唱指導",["A教諭"],"全校合唱の指導、進行要項作成"],
-    ["伴奏",["伴奏者(生徒)"],"修礼・校歌の伴奏"],
-    ["放送・BGM",["F教諭","A教諭"],"放送機器・BGM準備"],
-    ["ビデオ・写真",["E教諭","D教諭"],"授与時のビデオ、式中の写真記録"],
+    ["司会進行",["三浦"],"総練習・卒業式の司会、礼法指導(全体)"],
+    ["合図・暖房",["松本","福山"],"整列・入場合図、ドア管理、暖房"],
+    ["卒業生入場案内",["八柳"],"卒業生入場案内"],
+    ["証書管理",["渡會","金丸"],"証書管理、授与時の介添え(金丸)"],
+    ["合唱指導",["三浦"],"全校合唱の指導、進行要項作成"],
+    ["伴奏",["前田"],"修礼・校歌の伴奏"],
+    ["放送・BGM",["八柳","三浦"],"放送機器・BGM準備"],
+    ["ビデオ・写真",["福山","松本"],"授与時のビデオ、式中の写真記録"],
   ]],
   ["会場",[
-    ["体育館会場準備",["2年","A教諭"],"会場準備計画、全体配置計画"],
+    ["体育館会場準備",["2年","三浦"],"会場準備計画、全体配置計画"],
     ["ステージ",["2年","公務補"],"国旗・市旗・校旗・演台・横看板・生花の設置"],
     ["紅白幕",["2年"],"紅白幕設置"],
     ["長机・椅子",["2年"],"長机・椅子・白布"],
     ["合唱台・ピアノ",["1年","2年"],"合唱台・ピアノの設置"],
     ["保護者席",["2年"],"保護者席の設置(120)"],
-    ["ビデオ設置",["2年","E教諭"],"ビデオ・プロジェクタ・スクリーン設置"],
+    ["ビデオ設置",["2年","福山"],"ビデオ・プロジェクタ・スクリーン設置"],
     ["看板・案内表示",["1年","公務補"],"玄関前看板、案内掲示物"],
     ["廊下・教室準備",["1年"],"廊下・玄関・3年教室装飾"],
     ["保護者控え室",["3年"],"控室の設置(会議室)"],
-    ["受付",["C教諭"],"受付設置、しおり配布、控え室案内"],
+    ["受付",["奈良"],"受付設置、しおり配布、控え室案内"],
     ["靴置き場",["公務補"],"靴置き場・スリッパ準備"],
   ]],
   ["指導",[
-    ["送辞・答辞",["H教諭","A教諭"],"送辞・答辞作成指導、礼法指導"],
-    ["生徒指導",["E教諭"],"身だしなみ・規律指導"],
-    ["見送り",["H教諭"],"見送り計画、移動指示"],
+    ["送辞・答辞",["金丸","三浦"],"送辞・答辞作成指導、礼法指導"],
+    ["生徒指導",["福山"],"身だしなみ・規律指導"],
+    ["見送り",["金丸"],"見送り計画、移動指示"],
   ]],
   ["案内",[
     ["来賓・保護者案内",["校長","教頭"],"入場案内(来賓:校長 保護者:教頭)"],
   ]],
   ["接待",[
-    ["来賓接待",["B教諭"],"湯茶準備"],
+    ["来賓接待",["大岩"],"湯茶準備"],
   ]],
   ["美化",[
-    ["美化・清掃",["C教諭"],"校舎内環境整備、清掃計画、朝の清掃"],
+    ["美化・清掃",["奈良"],"校舎内環境整備、清掃計画、朝の清掃"],
   ]],
   ["校舎",[
     ["駐車場",["公務補"],"除雪、駐車場案内表示"],
   ]],
 ];
 const prep=[
-  ["2/12","木","案内状送付","教頭",0],
-  ["2/18","水","2月職員会議：進行表提案・各係提案／記念品準備完了","A教諭・各係・教頭・3年",0],
-  ["3/3","火","卒業台帳完成","3年",0],
-  ["3/4","水","公立学力検査日","",0],
-  ["3/5","木","公立面接日／生花注文","教頭",0],
-  ["3/6","金","卒業生練習①・在校生練習①・全校合唱練習","A教諭・各学年団",0],
-  ["3/9","月","同窓会入会式・卒業生練習②③・証書/学事報告完成","A教諭・各学年団",0],
-  ["3/10","火","3年生を送る会・奉仕活動・卒業生練習④・在校生練習②","A教諭・各学年団",0],
-  ["3/11","水","総練習・会場準備","A教諭・各学年団・各係",0],
-  ["3/12","木","第79回 卒業証書授与式","",1],
-  ["3/13","金","後片付け","各係・教頭",0],
+  ["2/11","木","案内状送付","教頭",0],
+  ["2/17","水","2月職員会議：進行表提案・各係提案／記念品準備完了","三浦・各係・教頭・3年",0],
+  ["3/2","火","卒業台帳完成","3年",0],
+  ["3/3","水","公立学力検査日","",0],
+  ["3/4","木","公立面接日／生花注文","教頭",0],
+  ["3/5","金","卒業生練習①・在校生練習①・全校合唱練習","三浦・各学年団",0],
+  ["3/8","月","同窓会入会式・卒業生練習②③・証書/学事報告完成","三浦・各学年団",0],
+  ["3/9","火","3年生を送る会・奉仕活動・卒業生練習④・在校生練習②","三浦・各学年団",0],
+  ["3/10","水","総練習・会場準備","三浦・各学年団・各係",0],
+  ["3/11","木","第80回 卒業証書授与式","",1],
+  ["3/12","金","後片付け","各係・教頭",0],
 ];
 
 /* ---------- render ---------- */
@@ -346,7 +368,7 @@ $("#prep").innerHTML=prep.map(p=>`
   </div>`).join("");
 
 /* name chips */
-const people=["校長","教頭","A教諭","B教諭","C教諭","D教諭","E教諭","F教諭","G教諭","H教諭","公務補"];
+const people=["校長","教頭","三浦","大岩","奈良","松本","福山","八柳","渡會","金丸","前田","公務補"];
 const allChips=[...people,...teams];
 $("#names").innerHTML=allChips.map(n=>{
   const isTeam=teams.includes(n);
@@ -389,6 +411,28 @@ document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
   t.classList.add("on");
   $("#p-"+t.dataset.p).classList.add("on");
 }));
+
+/* countdown */
+const cdTarget=new Date("2027-03-11T10:00:00+09:00").getTime();
+let cdTimer;
+function tickCD(){
+  const diff=cdTarget-Date.now();
+  if(diff<=0){
+    const cd=$("#cd");cd.classList.add("done");
+    cd.innerHTML='<div class="done-msg">🌸 ご卒業おめでとうございます 🌸</div>';
+    if(cdTimer)clearInterval(cdTimer);return;
+  }
+  const d=Math.floor(diff/864e5);
+  const h=Math.floor(diff%864e5/36e5);
+  const m=Math.floor(diff%36e5/6e4);
+  const s=Math.floor(diff%6e4/1e3);
+  $("#cd-d").textContent=d;
+  $("#cd-h").textContent=String(h).padStart(2,"0");
+  $("#cd-m").textContent=String(m).padStart(2,"0");
+  $("#cd-s").textContent=String(s).padStart(2,"0");
+}
+tickCD();
+cdTimer=setInterval(tickCD,1000);
 </script>
 </body>
 </html>
