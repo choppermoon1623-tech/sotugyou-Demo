@@ -11,7 +11,7 @@
   :root{
     --paper:#f6f3ec; --card:#ffffff; --ink:#1d2438; --ink-soft:#4a5169;
     --crimson:#962b2b; --crimson-soft:#f4e7e4; --line:#e3ddd0; --line-soft:#efeae0;
-    --gold:#9c7b32; --accent-bg:#eef1f6;
+    --gold:#9c7b32; --accent-bg:#eef1f6; --kohaku:#c0263a;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:"Noto Sans JP",sans-serif;background:var(--paper);color:var(--ink);line-height:1.7;-webkit-font-smoothing:antialiased}
@@ -35,16 +35,36 @@
   .scard .val{font-family:"Noto Serif JP",serif;font-size:18px;font-weight:700}
   .scard .val small{font-size:11px;font-weight:400}
 
-  /* countdown */
-  .cd{background:var(--ink);color:#fff;border-radius:14px;padding:16px 14px;margin-bottom:16px;text-align:center;position:relative;overflow:hidden}
-  .cd .cl{font-size:11.5px;letter-spacing:.12em;color:#cdb9a0;margin-bottom:11px}
-  .cd .cl b{color:#fff;font-family:"Noto Serif JP",serif;font-weight:500;letter-spacing:.02em}
-  .cd .boxes{display:flex;justify-content:center;gap:8px}
-  .cd .box{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:10px;padding:9px 4px;min-width:60px}
+  /* countdown (紅白) */
+  .cd{background:#fff;border:2px solid var(--kohaku);border-radius:14px;margin-bottom:16px;text-align:center;overflow:hidden}
+  .cd .maku{height:16px;background:repeating-linear-gradient(90deg,var(--kohaku) 0 20px,#fff 20px 40px);border-bottom:1px solid var(--kohaku)}
+  .cd .cl{font-size:11.5px;letter-spacing:.12em;color:var(--ink-soft);margin:13px 0 11px}
+  .cd .cl b{color:var(--kohaku);font-family:"Noto Serif JP",serif;font-weight:700;letter-spacing:.02em}
+  .cd .boxes{display:flex;justify-content:center;gap:8px;padding:0 10px 16px}
+  .cd .box{border:1.5px solid var(--kohaku);border-radius:10px;padding:9px 4px;min-width:60px}
   .cd .box .num{font-family:"Noto Serif JP",serif;font-size:26px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
-  .cd .box .u{font-size:10px;color:#cdb9a0;margin-top:5px}
-  .cd.done{background:var(--crimson)}
-  .cd .done-msg{font-family:"Noto Serif JP",serif;font-size:20px;font-weight:700;padding:6px 0}
+  .cd .box .u{font-size:10px;margin-top:5px}
+  .cd .box.r{background:var(--kohaku)} .cd .box.r .num{color:#fff} .cd .box.r .u{color:#ffd9dc}
+  .cd .box.w{background:#fff} .cd .box.w .num{color:var(--kohaku)} .cd .box.w .u{color:var(--ink-soft)}
+  .cd .done-msg{font-family:"Noto Serif JP",serif;font-size:20px;font-weight:700;color:var(--kohaku);padding:18px 10px}
+
+  /* todo */
+  .todo-prog{margin-bottom:13px}
+  .todo-prog .ptxt{font-size:12.5px;color:var(--ink-soft);margin-bottom:5px;display:flex;justify-content:space-between}
+  .todo-prog .pbar{height:8px;background:var(--line);border-radius:5px;overflow:hidden}
+  .todo-prog .pfill{height:100%;background:var(--crimson);width:0;transition:width .3s}
+  .todo-add{display:flex;gap:8px;margin-bottom:13px}
+  .todo-add input{flex:1;font-family:inherit;font-size:14px;padding:9px 12px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink)}
+  .todo-add input:focus{outline:none;border-color:var(--crimson)}
+  .todo-add button{font-family:inherit;font-size:13.5px;font-weight:700;padding:9px 16px;border:none;border-radius:9px;background:var(--crimson);color:#fff;cursor:pointer}
+  .titem{display:flex;align-items:center;gap:11px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:11px 13px;margin-bottom:7px}
+  .titem .ck{flex:none;width:22px;height:22px;border:2px solid var(--line);border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff;transition:.12s}
+  .titem.tdone .ck{background:var(--crimson);border-color:var(--crimson)}
+  .titem .tx{flex:1;font-size:14px}
+  .titem.tdone .tx{text-decoration:line-through;color:var(--ink-soft)}
+  .titem .dt{font-size:11px;color:var(--gold);font-weight:700;flex:none}
+  .titem .del{flex:none;background:none;border:none;color:var(--ink-soft);cursor:pointer;font-size:17px;padding:2px 4px;line-height:1;opacity:.5}
+  .titem .del:hover{opacity:1;color:var(--crimson)}
 
   /* name finder */
   .finder{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 16px 18px;margin-bottom:16px}
@@ -159,12 +179,13 @@
 
   <!-- COUNTDOWN -->
   <div class="cd" id="cd">
+    <div class="maku"></div>
     <div class="cl">卒業式まで　<b>令和9年3月11日(木) 10:00</b></div>
     <div class="boxes" id="cdBoxes">
-      <div class="box"><div class="num" id="cd-d">--</div><div class="u">日</div></div>
-      <div class="box"><div class="num" id="cd-h">--</div><div class="u">時間</div></div>
-      <div class="box"><div class="num" id="cd-m">--</div><div class="u">分</div></div>
-      <div class="box"><div class="num" id="cd-s">--</div><div class="u">秒</div></div>
+      <div class="box r"><div class="num" id="cd-d">--</div><div class="u">日</div></div>
+      <div class="box w"><div class="num" id="cd-h">--</div><div class="u">時間</div></div>
+      <div class="box r"><div class="num" id="cd-m">--</div><div class="u">分</div></div>
+      <div class="box w"><div class="num" id="cd-s">--</div><div class="u">秒</div></div>
     </div>
   </div>
 
@@ -185,6 +206,7 @@
     <button class="tab" data-p="prog">式次第</button>
     <button class="tab" data-p="role">係分担</button>
     <button class="tab" data-p="prep">準備日程</button>
+    <button class="tab" data-p="todo">やることリスト</button>
   </div>
 
   <!-- FLOW -->
@@ -213,6 +235,21 @@
     <div class="sec-h">準備日程</div>
     <div class="note">卒業式練習前の時間は準備に使用。3/8以降は体育館ステージ側は式練・合唱練のみ使用可。</div>
     <div class="prep" id="prep"></div>
+  </div>
+
+  <!-- TODO -->
+  <div class="panel" id="p-todo">
+    <div class="sec-h">やることリスト</div>
+    <div class="note">チェックは「この端末」に保存されます（先生どうしでの共有はされません）。準備日程の項目を初期登録済み。自由に追加・削除できます。</div>
+    <div class="todo-prog">
+      <div class="ptxt"><span>準備の進み具合</span><span id="todoCount">0/0 完了</span></div>
+      <div class="pbar"><div class="pfill" id="todoFill"></div></div>
+    </div>
+    <div class="todo-add">
+      <input id="todoInput" type="text" placeholder="やることを追加…">
+      <button id="todoAdd">追加</button>
+    </div>
+    <div id="todoList"></div>
   </div>
 
   <footer>第80回卒業証書授与式 実施要項より作成 ／ 令和9年2月17日 教務部教務係</footer>
@@ -419,7 +456,7 @@ function tickCD(){
   const diff=cdTarget-Date.now();
   if(diff<=0){
     const cd=$("#cd");cd.classList.add("done");
-    cd.innerHTML='<div class="done-msg">🌸 ご卒業おめでとうございます 🌸</div>';
+    cd.innerHTML='<div class="maku"></div><div class="done-msg">🌸 ご卒業おめでとうございます 🌸</div>';
     if(cdTimer)clearInterval(cdTimer);return;
   }
   const d=Math.floor(diff/864e5);
@@ -433,6 +470,51 @@ function tickCD(){
 }
 tickCD();
 cdTimer=setInterval(tickCD,1000);
+
+/* ---------- todo list ---------- */
+const TODO_KEY="sotsu80_todo_v1";
+const defaultTodos=[
+  {t:"案内状送付",d:"2/11",done:false},
+  {t:"進行表・各係提案／記念品準備完了",d:"2/17",done:false},
+  {t:"卒業台帳完成",d:"3/2",done:false},
+  {t:"生花注文",d:"3/4",done:false},
+  {t:"卒業生練習①・在校生練習①・全校合唱練習",d:"3/5",done:false},
+  {t:"卒業証書完成・学事報告完成",d:"3/8",done:false},
+  {t:"3年生を送る会・卒業生練習④",d:"3/9",done:false},
+  {t:"総練習・会場準備",d:"3/10",done:false},
+  {t:"後片付け",d:"3/12",done:false},
+];
+function loadTodos(){
+  try{const raw=localStorage.getItem(TODO_KEY);if(raw)return JSON.parse(raw);}catch(e){}
+  return defaultTodos.map(x=>({...x}));
+}
+function saveTodos(){try{localStorage.setItem(TODO_KEY,JSON.stringify(todos));}catch(e){}}
+function esc(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+let todos=loadTodos();
+function renderTodos(){
+  const done=todos.filter(t=>t.done).length,total=todos.length;
+  $("#todoCount").textContent=done+"/"+total+" 完了";
+  $("#todoFill").style.width=(total?done/total*100:0)+"%";
+  $("#todoList").innerHTML=todos.map((t,i)=>
+    '<div class="titem '+(t.done?"tdone":"")+'">'+
+      '<div class="ck" data-i="'+i+'">'+(t.done?"✓":"")+'</div>'+
+      '<div class="tx">'+esc(t.t)+'</div>'+
+      (t.d?'<div class="dt">'+esc(t.d)+'</div>':'')+
+      '<button class="del" data-i="'+i+'">×</button>'+
+    '</div>').join("");
+}
+$("#todoList").addEventListener("click",e=>{
+  const ck=e.target.closest(".ck"),del=e.target.closest(".del");
+  if(ck){const i=+ck.dataset.i;todos[i].done=!todos[i].done;saveTodos();renderTodos();}
+  else if(del){const i=+del.dataset.i;todos.splice(i,1);saveTodos();renderTodos();}
+});
+function addTodo(){
+  const el=$("#todoInput"),v=el.value.trim();if(!v)return;
+  todos.push({t:v,d:"",done:false});el.value="";saveTodos();renderTodos();
+}
+$("#todoAdd").addEventListener("click",addTodo);
+$("#todoInput").addEventListener("keydown",e=>{if(e.key==="Enter")addTodo();});
+renderTodos();
 </script>
 </body>
 </html>
